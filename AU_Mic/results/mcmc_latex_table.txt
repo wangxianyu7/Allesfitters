@@ -1,0 +1,25 @@
+parameter & value & unit & fit/fixed \\ 
+\hline 
+\multicolumn{4}{c}{\textit{Fitted parameters}} \\ 
+\hline 
+$R_b / R_\star$ & $0.05252_{-0.00044}^{+0.00051}$ & & fit \\ 
+$(R_\star + R_b) / a_b$ & $0.07581_{-0.00061}^{+0.0012}$ & & fit \\ 
+$\cos{i_b}$ & $0.0074_{-0.0048}^{+0.0082}$ & & fit \\ 
+$t_0$ & $2458702.7668135455$ & HJDUTC& fixed \\ 
+$P_b$ & $6.077193711819588$ & d& fixed \\ 
+$K_b$ & $0.396$ & km/s& fixed \\ 
+$\sqrt{e_b} \cos{\omega_b}$ & $0.0$ & & fixed \\ 
+$\sqrt{e_b} \sin{\omega_b}$ & $0.0$ & & fixed \\ 
+$q_{1;\mathrm{EPS.RM}}$ & $0.946_{-0.092}^{+0.039}$ & & fit \\ 
+$q_{2;\mathrm{EPS.RM}}$ & $0.315_{-0.057}^{+0.077}$ & & fit \\ 
+$q_{1;\mathrm{TESS.LC}}$ & $0.51\pm0.16$ & & fit \\ 
+$q_{2;\mathrm{TESS.LC}}$ & $0.111_{-0.071}^{+0.12}$ & & fit \\ 
+$\ln{\sigma_\mathrm{flux; TESS.LC}}$ & $-9.05_{-0.12}^{+0.19}$ & $\ln{ \mathrm{mag} }$& fit \\ 
+$\ln{\sigma_\mathrm{rv; EPS.RM}}$ & $-4.996_{-0.095}^{+0.11}$ & $\ln{ \mathrm{km/s} }$& fit \\ 
+$\lambda_\mathrm{host}$ & $-3.3_{-3.0}^{+6.3}$ & & fit \\ 
+$v\sin{i}_\mathrm{host}$ & $13.53_{-0.69}^{+0.52}$ & $\mathrm{km/s}$& fit \\ 
+micro-turbulent & $0.74_{-0.51}^{+0.67}$ & kms& fit \\ 
+macro-turbulent & $8.05_{-0.82}^{+1.1}$ & kms& fit \\ 
+quad_EPS.RM & $0.166_{-0.011}^{+0.012}$ & & fit \\ 
+slope_EPS.RM & $-0.160_{-0.013}^{+0.011}$ & & fit \\ 
+offset_EPS.RM & $0.0464_{-0.0025}^{+0.0029}$ & & fit \\ 

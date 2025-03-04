@@ -1,0 +1,32 @@
+Parameter & Value & Source \\ 
+\hline 
+\multicolumn{3}{c}{\textit{Derived parameters}} \\ 
+\hline 
+Host radius over semi-major axis b; $R_\star/a_\mathrm{b}$ & $0.1261_{-0.0047}^{+0.0061}$ & derived \\ 
+Semi-major axis b over host radius; $a_\mathrm{b}/R_\star$ & $7.93_{-0.36}^{+0.31}$ & derived \\ 
+Companion radius b over semi-major axis b; $R_\mathrm{b}/a_\mathrm{b}$ & $0.01497_{-0.00051}^{+0.00069}$ & derived \\ 
+Companion radius b; $R_\mathrm{b}$ ($\mathrm{R_{\oplus}}$) & $13.79\pm0.86$ & derived \\ 
+Companion radius b; $R_\mathrm{b}$ ($\mathrm{R_{jup}}$) & $1.231\pm0.077$ & derived \\ 
+Semi-major axis b; $a_\mathrm{b}$ ($\mathrm{R_{\odot}}$) & $8.40\pm0.63$ & derived \\ 
+Semi-major axis b; $a_\mathrm{b}$ (AU) & $0.0391\pm0.0029$ & derived \\ 
+Inclination b; $i_\mathrm{b}$ (deg) & $82.59_{-0.89}^{+0.59}$ & derived \\ 
+Eccentricity b; $e_\mathrm{b}$ & $0.177_{-0.031}^{+0.036}$ & derived \\ 
+Argument of periastron b; $w_\mathrm{b}$ (deg) & $111_{-13}^{+12}$ & derived \\ 
+Mass ratio b; $q_\mathrm{b}$ & $0.00158_{-0.00020}^{+0.00018}$ & derived \\ 
+Companion mass b; $M_\mathrm{b}$ ($\mathrm{M_{\oplus}}$) & $508\pm67$ & derived \\ 
+Companion mass b; $M_\mathrm{b}$ ($\mathrm{M_{jup}}$) & $1.60\pm0.21$ & derived \\ 
+Companion mass b; $M_\mathrm{b}$ ($\mathrm{M_{\odot}}$) & $0.00153\pm0.00020$ & derived \\ 
+Impact parameter b; $b_\mathrm{tra;b}$ & $0.858_{-0.023}^{+0.024}$ & derived \\ 
+Total transit duration b; $T_\mathrm{tot;b}$ (h) & $3.898_{-0.11}^{+0.088}$ & derived \\ 
+Full-transit duration b; $T_\mathrm{full;b}$ (h) & $1.20_{-0.42}^{+0.35}$ & derived \\ 
+Host density from orbit b; $\rho_\mathrm{\star;b}$ (cgs) & $0.218_{-0.029}^{+0.026}$ & derived \\ 
+Companion density b; $\rho_\mathrm{b}$ (cgs) & $1.05_{-0.25}^{+0.33}$ & derived \\ 
+Companion surface gravity b; $g_\mathrm{b}$ (cgs) & $495\pm71$ & derived \\ 
+Equilibrium temperature b; $T_\mathrm{eq;b}$ (K) & $1309_{-29}^{+36}$ & derived \\ 
+Transit depth (undil.) b; $\delta_\mathrm{tr; undil; b; K2}$ (ppt) & $15.520\pm0.041$ & derived \\ 
+Transit depth (dil.) b; $\delta_\mathrm{tr; dil; b; K2}$ (ppt) & $15.520\pm0.041$ & derived \\ 
+Limb darkening; $u_\mathrm{1; K2}$ & $0.439_{-0.077}^{+0.092}$ & derived \\ 
+Limb darkening; $u_\mathrm{2; K2}$ & $0.26_{-0.15}^{+0.12}$ & derived \\ 
+Limb darkening; $u_\mathrm{1; Keck}$ & $0.73_{-0.42}^{+0.56}$ & derived \\ 
+Limb darkening; $u_\mathrm{2; Keck}$ & $-0.10_{-0.37}^{+0.46}$ & derived \\ 
+Combined host density from all orbits; $rho_\mathrm{\star; combined}$ (cgs) & $0.218_{-0.029}^{+0.026}$ & derived \\ 

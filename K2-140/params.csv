@@ -1,0 +1,42 @@
+#name,value,fit,bounds,label,unit
+#companion b astrophysical params,,,,,
+b_rr,0.117,1,uniform 0.0 1.0,$R_b / R_\star$,
+b_rsuma,0.07461507491495965,1,uniform 0 1,$(R_\star + R_b) / a_b$,
+b_cosi,0.0,1,uniform 0.0 1.0,$\cos{i_b}$,
+b_epoch,2458435.7138,1,uniform 2458434.7138 2458436.7138,$T_{0;b}$,$\mathrm{BJD}$
+b_period,6.569188,1,uniform 5.569188 7.569188,$P_b$,$\mathrm{d}$
+b_K,0.104,1,uniform 0.0 1,$K_b$,$\mathrm{km/s}$
+b_f_c,0.0,1,uniform -1.0 1.0,$\sqrt{e_b} \cos{\omega_b}$,
+b_f_s,0.0,1,uniform -1.0 1.0,$\sqrt{e_b} \sin{\omega_b}$,
+#dilution per instrument,,,,,
+
+#limb darkening coefficients per instrument,,,,,
+host_ldc_q1_K2,0.5,1,uniform 0.0 1.0,$q_{1; \mathrm{K2}}$,
+host_ldc_q2_K2,0.5,1,uniform 0.0 1.0,$q_{2; \mathrm{K2}}$,
+host_ldc_q1_Keck,0.5,1,uniform 0.0 1.0,$q_{1; \mathrm{Keck}}$,
+host_ldc_q2_Keck,0.5,1,uniform 0.0 1.0,$q_{2; \mathrm{Keck}}$,
+#surface brightness per instrument and companion,,,,,
+
+#albedo per instrument and companion,,,,,
+host_geom_albedo_K2,0.0,0,trunc_normal 0 1 0.0 0.0,$A_{\mathrm{geom}; host; \mathrm{K2}}$,
+host_geom_albedo_CORALIE,0.0,0,trunc_normal 0 1 0.0 0.0,$A_{\mathrm{geom}; host; \mathrm{CORALIE}}$,
+host_geom_albedo_Keck,0.0,0,trunc_normal 0 1 0.0 0.0,$A_{\mathrm{geom}; host; \mathrm{Keck}}$,
+#spots per instrument and companion,,,,,
+#errors per instrument,
+ln_err_flux_K2,-7.0,1,uniform -15.0 0.0,$\ln{\sigma_\mathrm{K2}}$,$\ln{ \mathrm{rel. flux.} }$
+ln_jitter_rv_FIES,-3.0,1,uniform -15.0 0.0,$\ln{\sigma_\mathrm{jitter; FIES}}$,$\ln{ \mathrm{km/s} }$
+ln_jitter_rv_CORALIE,-3.0,1,uniform -15.0 0.0,$\ln{\sigma_\mathrm{jitter; CORALIE}}$,$\ln{ \mathrm{km/s} }$
+ln_jitter_rv_HARPS,-3.0,1,uniform -15.0 0.0,$\ln{\sigma_\mathrm{jitter; HARPS}}$,$\ln{ \mathrm{km/s} }$
+ln_jitter_rv_Keck,-3.0,1,uniform -15.0 0.0,$\ln{\sigma_\mathrm{jitter; Keck}}$,$\ln{ \mathrm{km/s} }$
+#baseline per instrument,
+
+
+host_lambda,0,1,uniform -180 180,$hostlambda_\mathrm{K2-140}$,$degree$
+host_vsini,10,1,uniform 0 20,$host_vsini$,$ \mathrm{km/s}$
+
+host_xi,2,1,normal 2 1,$host_xi$,$ \mathrm{km/s}$
+host_zeta,4,1,normal 4 1,$host_zeta$,$ \mathrm{km/s}$
+
+baseline_quad_rv_CORALIE,0,1,uniform -10 10,quad_CORALIE,
+baseline_slope_rv_CORALIE,0,1,uniform -10 10,slope_CORALIE,
+baseline_offset_rv_CORALIE,1.1,1,uniform -10 10,offset_CORALIE,

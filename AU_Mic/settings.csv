@@ -1,0 +1,71 @@
+names,values
+##############################################################################,
+### General settings
+##############################################################################,
+companions_phot,b
+companions_rv,b
+inst_phot,TESS.LC 
+inst_rv,EPS.RM 
+###############################################################################,
+# Fit performance settings,
+###############################################################################,
+multiprocess,True
+multiprocess_cores,all
+fast_fit,True
+fast_fit_width,0.3333333333333333
+secondary_eclipse,False
+phase_curve,False
+shift_epoch,True
+inst_for_b_epoch,all
+###############################################################################,
+# MCMC settings,
+###############################################################################,
+mcmc_nwalkers,50
+mcmc_total_steps,2000
+mcmc_burn_steps,1000
+mcmc_thin_by,10
+#mcmc_pre_run_loops,2
+#mcmc_pre_run_steps,1000
+mcmc_total_steps_over_max_tau,50
+de_steps,5000
+###############################################################################,
+# Nested Sampling settings,
+###############################################################################,
+ns_modus,dynamic
+ns_nlive,500
+ns_bound,single
+ns_sample,rwalk
+ns_tol,0.01
+###############################################################################,
+# Limb darkening law per object and instrument,
+# if 'lin' one corresponding parameter called 'ldc_q1_inst' has to be given in params.csv,
+# if 'quad' two corresponding parameter called 'ldc_q1_inst' and 'ldc_q2_inst' have to be given in params.csv,
+# if 'sing' three corresponding parameter called 'ldc_q1_inst'; 'ldc_q2_inst' and 'ldc_q3_inst' have to be given in params.csv,
+ ###############################################################################,
+host_ld_law_TESS.LC,quad
+host_ld_law_EPS.RM,quad
+###############################################################################,
+# Baseline settings per instrument,
+# baseline params per instrument: sample_offset / sample_linear / sample_GP / hybrid_offset / hybrid_poly_1 / hybrid_poly_2 / hybrid_poly_3 / hybrid_pol_4 / hybrid_spline / hybrid_GP,
+# if 'sample_offset' one corresponding parameter called 'baseline_offset_key_inst' has to be given in params.csv,
+# if 'sample_linear' two corresponding parameters called 'baseline_a_key_inst' and 'baseline_b_key_inst' have to be given in params.csv,
+# if 'sample_GP' two corresponding parameters called 'baseline_gp1_key_inst' and 'baselie_gp2_key_inst' have to be given in params.csv,
+###############################################################################,
+baseline_flux_TESS.LC,hybrid_offset
+baseline_rv_EPS.RM,sample_quad
+###############################################################################,
+# Error settings per instrument,
+# errors (overall scaling) per instrument: sample / hybrid,
+# if 'sample' one corresponding parameter called 'ln_err_key_inst' (photometry) or 'ln_jitter_key_inst' (RV) has to be given in params.csv,
+###############################################################################,
+error_flux_TESS.LC,sample
+# TTVs,
+###############################################################################,
+fit_ttvs,False
+###############################################################################,
+# Flux weighted RVs per object and instrument,
+# ("Yes" for Rossiter-McLaughlin effect),
+###############################################################################,
+b_flux_weighted_EPS.RM,True
+#t_exp_EPS.RM,0.0026178001426160336
+#t_exp_n_int_EPS.RM,10

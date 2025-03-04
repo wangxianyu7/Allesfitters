@@ -1,0 +1,82 @@
+#name,value
+###############################################################################,
+# General settings,
+###############################################################################,
+companions_phot,b
+companions_rv,b
+inst_phot,K2
+inst_rv,CORALIE Keck
+#inst_rv,FIES CORALIE HARPS Keck
+###############################################################################,
+# Fit performance settings,
+###############################################################################,
+multiprocess,True
+multiprocess_cores,all
+fast_fit,True
+fast_fit_width,0.3333333333333333
+secondary_eclipse,False
+phase_curve,False
+shift_epoch,True
+inst_for_b_epoch,all
+###############################################################################,
+# MCMC settings,
+###############################################################################,
+mcmc_nwalkers,50
+mcmc_total_steps,10000
+mcmc_burn_steps,8000
+mcmc_thin_by,10
+###############################################################################,
+# Nested Sampling settings,
+###############################################################################,
+ns_modus,dynamic
+ns_nlive,500
+ns_bound,single
+ns_sample,rwalk
+ns_tol,0.01
+###############################################################################,
+# Limb darkening law per object and instrument,
+# if 'lin' one corresponding parameter called 'ldc_q1_inst' has to be given in params.csv,
+# if 'quad' two corresponding parameter called 'ldc_q1_inst' and 'ldc_q2_inst' have to be given in params.csv,
+# if 'sing' three corresponding parameter called 'ldc_q1_inst'; 'ldc_q2_inst' and 'ldc_q3_inst' have to be given in params.csv,
+###############################################################################,
+host_ld_law_K2,quad
+host_ld_law_Keck,quad
+###############################################################################,
+# Baseline settings per instrument,
+# baseline params per instrument: sample_offset / sample_linear / sample_quad / sample_GP / hybrid_offset / hybrid_poly_1 / hybrid_poly_2 / hybrid_poly_3 / hybrid_pol_4 / hybrid_spline / hybrid_GP,
+# if 'sample_offset' one corresponding parameter called 'baseline_offset_key_inst' has to be given in params.csv,
+# if 'sample_linear' two corresponding parameters called 'baseline_a_key_inst' and 'baseline_b_key_inst' have to be given in params.csv,
+# if 'sample_GP' two corresponding parameters called 'baseline_gp1_key_inst' and 'baseline_gp2_key_inst' have to be given in params.csv,
+###############################################################################,
+baseline_flux_K2,hybrid_offset
+baseline_rv_CORALIE,hybrid_offset
+baseline_rv_Keck,hybrid_offset
+###############################################################################,
+# Error settings per instrument,
+# errors (overall scaling) per instrument: sample / hybrid,
+# if 'sample' one corresponding parameter called 'ln_err_key_inst' (photometry) or 'ln_jitter_key_inst' (RV) has to be given in params.csv,
+###############################################################################,
+error_flux_K2,sample
+error_rv_CORALIE,sample
+error_rv_Keck,sample
+###############################################################################,
+# Exposure times for interpolation,
+# needs to be in the same units as the time series,
+# if not given the observing times will not be interpolated leading to biased results,
+###############################################################################,
+#t_exp_K2,0.02083333333
+#t_exp_Keck,0.02083333333
+###############################################################################,
+# Number of points for exposure interpolation,
+# Sample as fine as possible; generally at least with a 2 min sampling for photometry,
+# n_int=5 was found to be a good number of interpolation points for any short photometric cadence t_exp;,
+# increase to at least n_int=10 for 30 min phot. cadence,
+# the impact on RV is not as drastic and generally n_int=5 is fine enough,
+###############################################################################,
+#t_exp_n_int_K2,10
+#t_exp_n_int_Keck,10
+###############################################################################,
+# Flux weighted RVs per object and instrument,
+# ("True" for Rossiter-McLaughlin effect),
+###############################################################################,
+b_flux_weighted_Keck,True

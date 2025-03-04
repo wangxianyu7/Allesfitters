@@ -1,0 +1,54 @@
+
+allesfitter version
+---------------------
+v1.2.9
+
+Shifting epochs into the data center
+------------------------------------
+Companion b
+	input epoch: 2458702.7668135455
+
+Running MCMC...
+--------------------------
+
+Running on 43 CPUs.
+
+Running full MCMC
+
+Time taken to run 'emcee' on 43 cores is 0.19 hours
+
+Acceptance fractions:
+--------------------------
+[0.24  0.23  0.24  0.16  0.24  0.27  0.235 0.21  0.26  0.245 0.225 0.29
+ 0.28  0.175 0.23  0.28  0.26  0.26  0.215 0.22  0.2   0.255 0.205 0.24
+ 0.245 0.195 0.24  0.22  0.24  0.21  0.23  0.215 0.215 0.265 0.205 0.235
+ 0.235 0.27  0.245 0.26  0.22  0.23  0.225 0.21  0.205 0.18  0.26  0.21
+ 0.2   0.23 ]
+
+Convergence check
+-------------------
+Total steps:         2000      
+Burn steps:          1000      
+Evaluation steps:    1000                
+Evaluation samples:  5000                
+Autocorrelation times:
+	 parameter                      tau (in steps)       Chain length (in multiples of tau)
+	 b_rr                           65.2710872960952     15.320719194757833  
+	 b_rsuma                        71.70347729706035    13.9463250276845    
+	 b_cosi                         90.06744670997351    11.102790592255861  
+	 host_ldc_q1_EPS.RM             69.74165818462833    14.338632404648054  
+	 host_ldc_q2_EPS.RM             65.79070071589676    15.199716511886516  
+	 host_ldc_q1_TESS.LC            71.7625010414474     13.934854352727152  
+	 host_ldc_q2_TESS.LC            72.6598265620752     13.762763377169277  
+	 ln_err_flux_TESS.LC            95.44838997786673    10.476866086812857  
+	 ln_jitter_rv_EPS.RM            59.42756293186966    16.827208632910683  
+	 host_lambda                    79.55706854576317    12.569593353289225  
+	 host_vsini                     59.57001302597776    16.7869696379605    
+	 host_xi                        59.92216073856794    16.688316770866475  
+	 host_zeta                      86.56875939234016    11.55151127288169   
+	 baseline_quad_rv_EPS.RM        67.59064755885255    14.794946284976477  
+	 baseline_slope_rv_EPS.RM       75.56581292681872    13.233497546945525  
+	 baseline_offset_rv_EPS.RM      78.87631679610908    12.67807677410882   
+
+Not yet converged! Some chains are less than 50x the autocorrelation length. Please continue to run with longer chains, or start again with more walkers.
+

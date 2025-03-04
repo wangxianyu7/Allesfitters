@@ -1,0 +1,31 @@
+parameter & value & unit & fit/fixed \\ 
+\hline 
+\multicolumn{4}{c}{\textit{Fitted parameters}} \\ 
+\hline 
+$R_b / R_\star$ & $0.11868_{-0.00063}^{+0.00082}$ & & fit \\ 
+$(R_\star + R_b) / a_b$ & $0.1411_{-0.0051}^{+0.0066}$ & & fit \\ 
+$\cos{i_b}$ & $0.129_{-0.010}^{+0.015}$ & & fit \\ 
+$T_{0;b}$ & $2458429.1419\pm0.0016$ & $\mathrm{BJD}$& fit \\ 
+$P_b$ & $6.569200_{-0.000011}^{+0.000012}$ & $\mathrm{d}$& fit \\ 
+$K_b$ & $0.1029_{-0.010}^{+0.0084}$ & $\mathrm{km/s}$& fit \\ 
+$\sqrt{e_b} \cos{\omega_b}$ & $-0.151_{-0.082}^{+0.093}$ & & fit \\ 
+$\sqrt{e_b} \sin{\omega_b}$ & $0.383_{-0.038}^{+0.047}$ & & fit \\ 
+$q_{1; \mathrm{K2}}$ & $0.490_{-0.075}^{+0.066}$ & & fit \\ 
+$q_{2; \mathrm{K2}}$ & $0.311_{-0.069}^{+0.098}$ & & fit \\ 
+$q_{1; \mathrm{Keck}}$ & $0.55_{-0.34}^{+0.29}$ & & fit \\ 
+$q_{2; \mathrm{Keck}}$ & $0.58_{-0.34}^{+0.27}$ & & fit \\ 
+$A_{\mathrm{geom}; host; \mathrm{K2}}$ & $0.0$ & & fixed \\ 
+$A_{\mathrm{geom}; host; \mathrm{CORALIE}}$ & $0.0$ & & fixed \\ 
+$A_{\mathrm{geom}; host; \mathrm{Keck}}$ & $0.0$ & & fixed \\ 
+$\ln{\sigma_\mathrm{K2}}$ & $-8.851_{-0.053}^{+0.068}$ & $\ln{ \mathrm{rel. flux.} }$& fit \\ 
+$\ln{\sigma_\mathrm{jitter; FIES}}$ & $-9.4_{-3.3}^{+3.5}$ & $\ln{ \mathrm{km/s} }$& fit \\ 
+$\ln{\sigma_\mathrm{jitter; CORALIE}}$ & $-12.4_{-1.7}^{+2.8}$ & $\ln{ \mathrm{km/s} }$& fit \\ 
+$\ln{\sigma_\mathrm{jitter; HARPS}}$ & $-7.02_{-0.66}^{+0.98}$ & $\ln{ \mathrm{km/s} }$& fit \\ 
+$\ln{\sigma_\mathrm{jitter; Keck}}$ & $-5.17_{-0.21}^{+0.22}$ & $\ln{ \mathrm{km/s} }$& fit \\ 
+$hostlambda_\mathrm{K2-140}$ & $3.7_{-3.0}^{+2.8}$ & $degree$& fit \\ 
+$host_vsini$ & $3.87_{-0.62}^{+0.88}$ & $ \mathrm{km/s}$& fit \\ 
+$host_xi$ & $1.45_{-0.85}^{+0.93}$ & $ \mathrm{km/s}$& fit \\ 
+$host_zeta$ & $4.86\pm0.83$ & $ \mathrm{km/s}$& fit \\ 
+quad_CORALIE & $2.4_{-2.2}^{+2.0}$ & & fit \\ 
+slope_CORALIE & $1.35\pm0.67$ & & fit \\ 
+offset_CORALIE & $-6.92\pm0.84$ & & fit \\ 

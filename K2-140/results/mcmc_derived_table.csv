@@ -1,0 +1,29 @@
+#property,value,lower_error,upper_error,source
+Host radius over semi-major axis b; $R_\star/a_\mathrm{b}$,0.1261320218691478,0.004679049425574622,0.006063034518100807,derived
+Semi-major axis b over host radius; $a_\mathrm{b}/R_\star$,7.928200826253483,0.3636214287408617,0.3054387453477654,derived
+Companion radius b over semi-major axis b; $R_\mathrm{b}/a_\mathrm{b}$,0.014966852831995016,0.0005139649612155902,0.0006904849824634785,derived
+Companion radius b; $R_\mathrm{b}$ ($\mathrm{R_{\oplus}}$),13.793120838891529,0.8491671559906457,0.8646218613904733,derived
+Companion radius b; $R_\mathrm{b}$ ($\mathrm{R_{jup}}$),1.2305419350771283,0.07575774964505033,0.07713652848059338,derived
+Semi-major axis b; $a_\mathrm{b}$ ($\mathrm{R_{\odot}}$),8.401850043457745,0.627628837089806,0.6213092654888754,derived
+Semi-major axis b; $a_\mathrm{b}$ (AU),0.03907252855861372,0.002918767358921888,0.00288937839808847,derived
+Inclination b; $i_\mathrm{b}$ (deg),82.58843022656852,0.8889922879194927,0.5907785191545969,derived
+Eccentricity b; $e_\mathrm{b}$,0.17683022427254041,0.030581254356164378,0.036176065983977324,derived
+Argument of periastron b; $w_\mathrm{b}$ (deg),111.3576917273335,13.172194019556116,11.586222488189748,derived
+Mass ratio b; $q_\mathrm{b}$,0.0015805023446416272,0.00019523884590870824,0.00017934625563029724,derived
+Companion mass b; $M_\mathrm{b}$ ($\mathrm{M_{\oplus}}$),508.2968852591804,66.76001969806043,63.690363118003006,derived
+Companion mass b; $M_\mathrm{b}$ ($\mathrm{M_{jup}}$),1.5992808531661842,0.21005051251821927,0.2003922928110926,derived
+Companion mass b; $M_\mathrm{b}$ ($\mathrm{M_{\odot}}$),0.001526664280929982,0.00020051300809219384,0.00019129332724936144,derived
+Impact parameter b; $b_\mathrm{tra;b}$,0.8577050592480814,0.02260249665176073,0.024234411591147476,derived
+Total transit duration b; $T_\mathrm{tot;b}$ (h),3.898123918084622,0.11174770876017304,0.08825488831556827,derived
+Full-transit duration b; $T_\mathrm{full;b}$ (h),1.1975859786949616,0.4181461207276953,0.34616385164209595,derived
+Host density from orbit b; $\rho_\mathrm{\star;b}$ (cgs),0.21845021940177195,0.0286991720314749,0.026232057531728414,derived
+Companion density b; $\rho_\mathrm{b}$ (cgs),1.0548621676648042,0.24887367488317846,0.3292911803101244,derived
+Companion surface gravity b; $g_\mathrm{b}$ (cgs),494.61156547374594,69.21460744859161,70.6028668621176,derived
+Equilibrium temperature b; $T_\mathrm{eq;b}$ (K),1309.0544338282027,29.392952136580107,36.018422536695425,derived
+Transit depth (undil.) b; $\delta_\mathrm{tr; undil; b; K2}$ (ppt),15.520419912766037,0.03968182997343739,0.041149328628474535,derived
+Transit depth (dil.) b; $\delta_\mathrm{tr; dil; b; K2}$ (ppt),15.520419912766037,0.03968182997343739,0.041149328628474535,derived
+Limb darkening; $u_\mathrm{1; K2}$,0.43948873227779867,0.07688151705729634,0.09222103345924065,derived
+Limb darkening; $u_\mathrm{2; K2}$,0.2629071930037621,0.14553377490994426,0.12348488667985541,derived
+Limb darkening; $u_\mathrm{1; Keck}$,0.7342587317029604,0.42381768202059117,0.5617243740338179,derived
+Limb darkening; $u_\mathrm{2; Keck}$,-0.09508694216915901,0.37202357578651757,0.45950234744165874,derived
+Combined host density from all orbits; $rho_\mathrm{\star; combined}$ (cgs),0.21845021940177195,0.0286991720314749,0.026232057531728414,derived
