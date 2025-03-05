@@ -4,15 +4,14 @@ Allesfitters is a modified version of Allesfitter \citep{allesfitter-paper, alle
 
 To achieve faster modeling, I replaced ellc \citep{ellc} with PyTransit \citep{Parviainen2015} and RadVel \citep{Fulton2018RadVel}, which significantly accelerates the modeling process. However, this also means that Allesfitters currently cannot fit flares, starspots, or binary systems.
 
-The most notable feature of Allesfitters is its incorporation of one of the most realistic Rossiter-McLaughlin models \citep{Hirano2011}, implemented in tracit \citep{Hjorth2021, KnudstrupAlbrecht2022}. Note that Allesfitters currently works only on x86 architecture.
+The most notable feature of Allesfitters is its incorporation of one of the most realistic Rossiter-McLaughlin models, \cite{Hirano2011}, implemented in tracit \citep{Hjorth2021, KnudstrupAlbrecht2022}. **Note that Allesfitters currently works only on x86 architecture**.
 
 Compared to the \cite{Ohta2005} model, the \cite{Hirano2011} model introduces more parameters, especially microturbulent velocities ($V_\xi$) and macroturbulent velocities ($V_\zeta$). Some empirical relations can be used to calculate these parameters, followed by applying Gaussian priors on them (typically 1 km/s). For $V_\zeta$ and $V_\xi$, the relations from \cite{Doyle2014} and \cite{Bruntt2010} are preferred, respectively. Both have valid ranges (see code below). Outside these ranges, the empirical relations calibrated by the Gaia-ESO Survey working groups are adopted \citep{Blanco2014HighResolutionSpectralLibrary, Blanco2014iSpec, Blanco2019iSpec}.
 
 If you use this code, I would appreciate it if you cite \citep{allesfitter-paper, allesfitter-code, Wang2024}.
 Enjoy!
 
-
-
+Tutorial for Installation and Usage: [Colab Link](https://colab.research.google.com/drive/1djLmR8l9Ujg-Ll7OH0NoWbHNctCPz4_q?usp=sharing)
 
 ```Python
 import numpy as np
@@ -121,7 +120,7 @@ def _estimate_vmic_Bruntt2010(teff, logg, feh):
         return np.nan
 
     vmic = 1.01 + 4.5610e-4*(teff-t0) + 2.75e-7*(teff-t0)**2
-    
+  
     vmic = float("%.2f" % vmic)
     return vmic
 
@@ -158,6 +157,7 @@ print(vmac,vmic)
 ```
 
 Reference:
+
 ```python
 @ARTICLE{Doyle2014,
        author = {{Doyle}, Amanda P. and {Davies}, Guy R. and {Smalley}, Barry and {Chaplin}, William J. and {Elsworth}, Yvonne},
