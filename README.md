@@ -1,17 +1,24 @@
 ## Allesfitters
 
-Allesfitters is a modified version of Allesfitter \citep{allesfitter-paper, allesfitter-code} with many new features.
+Allesfitters is a modified version of [Allesfitter](https://github.com/MNGuenther/allesfitter) \citep{allesfitter-paper, allesfitter-code} with many new features.
 
 To achieve faster modeling, I replaced ellc \citep{ellc} with PyTransit \citep{Parviainen2015} and RadVel \citep{Fulton2018RadVel}, which significantly accelerates the modeling process. However, this also means that Allesfitters currently cannot fit flares, starspots, or binary systems.
 
-The most notable feature of Allesfitters is its incorporation of one of the most realistic Rossiter-McLaughlin models, \cite{Hirano2011}, implemented in tracit \citep{Hjorth2021, KnudstrupAlbrecht2022}. **Note that Allesfitters currently works only on x86 architecture**.
+The most notable feature of Allesfitters is its incorporation of one of the most realistic Rossiter-McLaughlin models, \cite{Hirano2011}, implemented in tracit \citep{Hjorth2021, KnudstrupAlbrecht2022}. 
 
 Compared to the \cite{Ohta2005} model, the \cite{Hirano2011} model introduces more parameters, especially microturbulent velocities ($V_\xi$) and macroturbulent velocities ($V_\zeta$). Some empirical relations can be used to calculate these parameters, followed by applying Gaussian priors on them (typically 1 km/s). For $V_\zeta$ and $V_\xi$, the relations from \cite{Doyle2014} and \cite{Bruntt2010} are preferred, respectively. Both have valid ranges (see code below). Outside these ranges, the empirical relations calibrated by the Gaia-ESO Survey working groups are adopted \citep{Blanco2014HighResolutionSpectralLibrary, Blanco2014iSpec, Blanco2019iSpec}.
 
 If you use this code, I would appreciate it if you cite \citep{allesfitter-paper, allesfitter-code, Wang2024}.
 Enjoy!
 
-Tutorial for Installation and Usage: [Colab Link](https://colab.research.google.com/drive/1djLmR8l9Ujg-Ll7OH0NoWbHNctCPz4_q?usp=sharing)
+Tutorial for Installation and Usage: [Colab Link](https://colab.research.google.com/drive/1djLmR8l9Ujg-Ll7OH0NoWbHNctCPz4_q?usp=sharing).
+
+
+Notes:
+1. Allesfitters currently works only on x86 architecture.
+2. Differential rotation and convective blueshifts have not been considered yet, but it will be added later along with other new features. Stay tuned!
+
+
 
 ```Python
 import numpy as np
