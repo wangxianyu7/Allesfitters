@@ -27,8 +27,6 @@ Mar 07, 2025: Updated README
 
 </details>
 
-
-
 <details>
 
 <summary>Code for calculating $V_\xi$ and $V_\zeta$</summary>
