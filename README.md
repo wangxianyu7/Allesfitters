@@ -19,11 +19,19 @@ Notes:
 2. Differential rotation and convective blueshifts have not been considered yet, but it will be added later along with other new features. Stay tuned!
 
 
+<details>
+
+<summary>Update Log</summary>
+
+Mar 07, 2025: Updated README
+
+</details>
+
 
 
 <details>
 
-<summary>Code for calculateing $V_\xi$ and $V_\zeta$</summary>
+<summary>Code for calculating $V_\xi$ and $V_\zeta$</summary>
 
 
 ```Python
