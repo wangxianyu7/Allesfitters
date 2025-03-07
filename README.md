@@ -18,6 +18,14 @@ Notes:
 1. Allesfitters currently works only on x86 architecture.
 2. Differential rotation and convective blueshifts have not been considered yet, but it will be added later along with other new features. Stay tuned!
 
+
+
+
+<details>
+
+<summary>Code for calculateing $V_\xi$ and $V_\zeta$</summary>
+
+
 ```Python
 
 # The code below is modified from iSpec. (https://github.com/marblestation/iSpec/blob/d21ee5125fb170d09353e937b24ff0b0049a0224/ispec/common.py#L1027)
@@ -163,7 +171,13 @@ if np.isnan(vmac):
 print(vmac,vmic)
 ```
 
-Reference:
+</details>
+
+
+<details>
+<summary>References</summary>
+
+
 
 ```python
 @ARTICLE{Doyle2014,
@@ -425,6 +439,5 @@ archivePrefix = {arXiv},
       adsnote = {Provided by the SAO/NASA Astrophysics Data System}
 }
 
-
-
 ```
+</details>
