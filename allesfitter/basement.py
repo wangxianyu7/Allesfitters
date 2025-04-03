@@ -292,7 +292,14 @@ class Basement():
         else:
             self.settings['fast_fit_width'] = 8./24.
                 
-            
+        #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        #::: cornerplot
+        #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        if ('cornerplot' in self.settings.keys()) and len(self.settings['cornerplot']):
+            self.settings['cornerplot'] = set_bool(self.settings['cornerplot'])
+        else:
+            self.settings['cornerplot'] = False
+
         #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
         #::: Host stellar density prior
         #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

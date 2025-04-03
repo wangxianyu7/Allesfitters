@@ -125,20 +125,20 @@ def plot_MCMC_chains(sampler):
     
     
     
-###############################################################################
-#::: plot the MCMC corner plot
-###############################################################################
-#def plot_MCMC_corner(sampler):
-#    samples = sampler.get_chain(flat=True, discard=int(1.*config.BASEMENT.settings['mcmc_burn_steps']/config.BASEMENT.settings['mcmc_thin_by']))
-#    
-#    fig = corner(samples, 
-#                 labels = config.BASEMENT.fitkeys,
-#                 range = [0.999]*config.BASEMENT.ndim,
-#                 quantiles=[0.15865, 0.5, 0.84135],
-#                 show_titles=True, title_kwargs={"fontsize": 14},
-#                 truths=config.BASEMENT.fittruths)
-#            
-#    return fig
+# ##############################################################################
+# ::: plot the MCMC corner plot
+# ##############################################################################
+def plot_MCMC_corner(sampler):
+   samples = sampler.get_chain(flat=True, discard=int(1.*config.BASEMENT.settings['mcmc_burn_steps']/config.BASEMENT.settings['mcmc_thin_by']))
+   
+   fig = corner(samples, 
+                labels = config.BASEMENT.fitkeys,
+                range = [0.999]*config.BASEMENT.ndim,
+                quantiles=[0.15865, 0.5, 0.84135],
+                show_titles=True, title_kwargs={"fontsize": 14},
+                truths=config.BASEMENT.fittruths)
+           
+   return fig
 
 def plot_MCMC_corner(sampler):
     samples = sampler.get_chain(flat=True, discard=int(1.*config.BASEMENT.settings['mcmc_burn_steps']/config.BASEMENT.settings['mcmc_thin_by']))
@@ -349,9 +349,10 @@ def mcmc_output(datadir, quiet=False):
 
 
     #::: plot the corner
-    #fig = plot_MCMC_corner(reader)
-    #fig.savefig( os.path.join(config.BASEMENT.outdir,'mcmc_corner.pdf'), bbox_inches='tight' )
-    #plt.close(fig)
+    if config.BASEMENT.settings['cornerplot']:
+        fig = plot_MCMC_corner(reader)
+        fig.savefig( os.path.join(config.BASEMENT.outdir,'mcmc_corner.pdf'), bbox_inches='tight' )
+        plt.close(fig)
 
 
     #::: save the tables
