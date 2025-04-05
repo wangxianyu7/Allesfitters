@@ -1107,28 +1107,27 @@ def rv_fct(params, inst, companion, xx=None, settings=None):
             omega = np.rad2deg(np.mod( np.arctan2(params[companion+'_f_s'], params[companion+'_f_c']), 2*np.pi))
             q1, q2 = params['host_ldc_'+inst]
             u1 = 2*np.sqrt(q1)*q2; u2 = np.sqrt(q1)*(1-2*q2)
-
-
-            try:
-                if t_exp != None:
-                    bjdtime = time
-                    ninterp = n_int
-                    exptime = t_exp*24*60
-                    npoints = len(bjdtime)
-
-                    # Compute the time offsets
-                    time_offsets = (np.arange(ninterp) / ninterp - (ninterp - 1.0) / (2.0 * ninterp)) / 1440.0 * exptime
-                    transitbjd = bjdtime[:, None] + time_offsets
-                                        
-                    supersampled_model = []
-                    for i in range(npoints):
-                        supersampled_values = get_rm_tracit(transitbjd[i], rr, ar, period, t0, inc, ecc, omega, lambda_r, vsini, zi, zeta, u1, u2)
-                        supersampled_model.append(np.mean(supersampled_values))
-                    rm[in_transit_mask] = np.asarray(supersampled_model)
-                else:
-                    rm[in_transit_mask] = get_rm_tracit(time, rr, ar, period, t0, inc, ecc, omega, lambda_r, vsini, zi, zeta, u1, u2)
-            except:
+            if np.isnan(rr*ar*period*t0*inc*lambda_r*vsini*zi*zeta*ecc*omega*q1*q2*u1*u2):
                 rm[in_transit_mask] = np.nan
+            else:
+                try:
+                    if t_exp != None:
+                        bjdtime = time
+                        ninterp = n_int
+                        exptime = t_exp*24*60
+                        npoints = len(bjdtime)
+                        # Compute the time offsets
+                        time_offsets = (np.arange(ninterp) / ninterp - (ninterp - 1.0) / (2.0 * ninterp)) / 1440.0 * exptime
+                        transitbjd = bjdtime[:, None] + time_offsets
+                        supersampled_model = []
+                        for i in range(npoints):
+                            supersampled_values = get_rm_tracit(transitbjd[i], rr, ar, period, t0, inc, ecc, omega, lambda_r, vsini, zi, zeta, u1, u2)
+                            supersampled_model.append(np.mean(supersampled_values))
+                        rm[in_transit_mask] = np.asarray(supersampled_model)
+                    else:
+                        rm[in_transit_mask] = get_rm_tracit(time, rr, ar, period, t0, inc, ecc, omega, lambda_r, vsini, zi, zeta, u1, u2)
+                except:
+                    rm[in_transit_mask] = np.nan
             if np.isnan(np.mean(rm)):
                 rm = np.zeros_like(rm)
             model_rv1 = model_rv1+rm
