@@ -66,7 +66,7 @@ def _estimate_vmac_doyle2014(teff, logg, feh):
 
 def _estimate_vmac_ges(teff, logg, feh):
     """
-    Estimate Microturbulence velocity (Vmic) by using an empirical relation
+    Estimate Macroturbulence velocity (Vmic) by using an empirical relation
     considering the effective temperature, surface gravity and metallicity.
 
     The relation was constructed by Maria Bergemann for the Gaia ESO Survey.
@@ -89,7 +89,7 @@ def _estimate_vmac_ges(teff, logg, feh):
 
 def estimate_vmac(teff, logg, feh, relation='GES'):
     """
-    Estimate Microturbulence velocity (Vmic) by using an empirical relation
+    Estimate Macroturbulence velocity (Vmic) by using an empirical relation
     considering the effective temperature, surface gravity and metallicity.
 
     By default, the selected relation was constructed by Maria Bergemann
