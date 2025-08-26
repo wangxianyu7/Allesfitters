@@ -24,7 +24,7 @@ sns.set_context(rc={'lines.markeredgewidth': 1})
 
 #::: modules
 import numpy as np
-import ellc
+#import ellc
 from astropy import units as u
 from scipy.optimize import minimize
 from scipy.interpolate import UnivariateSpline
