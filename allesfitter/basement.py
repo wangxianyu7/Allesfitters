@@ -26,7 +26,7 @@ from datetime import datetime
 from multiprocessing import cpu_count
 import warnings
 warnings.formatwarning = lambda msg, *args, **kwargs: f'\n! WARNING:\n {msg}\ntype: {args[0]}, file: {args[1]}, line: {args[2]}\n'
-warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning) 
+#warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning) 
 warnings.filterwarnings('ignore', category=np.RankWarning) 
 from scipy.stats import truncnorm
 
