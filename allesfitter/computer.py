@@ -550,8 +550,8 @@ def flux_subfct_ellc(params, inst, companion, xx=None, settings=None, t_exp=None
         secosw = params[companion+'_f_c']
         sesinw = params[companion+'_f_s']
 
-        e = np.sqrt(secosw**2+sesinw**2)
-        w = np.arctan2(sesinw,secosw)
+        e = secosw**2+sesinw**2
+        w = np.mod( np.arctan2(get_params(companion+'_f_s'), get_params(companion+'_f_c')), 2*np.pi)
 
 
 
