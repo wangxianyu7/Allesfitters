@@ -14,10 +14,20 @@ Enjoy!
 Tutorial for Installation and Usage: [Colab Link](https://colab.research.google.com/drive/1djLmR8l9Ujg-Ll7OH0NoWbHNctCPz4_q?usp=sharing).
 
 Notes:
+1. Differential rotation and convective blueshifts have not been considered yet, but it will be added later along with other new features. Stay tuned!
+2. Tracit cannot run directly on Mac computers with Apple Silicon, but we can set up a Docker container to run it.
 
-1. Allesfitters currently works only on x86 architecture.
-2. Differential rotation and convective blueshifts have not been considered yet, but it will be added later along with other new features. Stay tuned!
+<details>
 
+<summary>Running Allesfitters on Mac computers with Apple Silicon</summary>
+
+1. Download docker desktop (Apple Silicon): https://www.docker.com/
+2. Create a Webtop container by typing the following command in your terminal:
+```bash
+docker run -d --name=ubuntu-webtop --platform linux/amd64 -e PUID=$(id -u) -e PGID=$(id -g) -e TZ=America/New_York -p 3000:3000 -v $HOME/webtop-config:/config --shm-size="4gb" --restart unless-stopped lscr.io/linuxserver/webtop:ubuntu-xfce-4b039743-ls209
+```
+3. Open the container in Docker Desktop and install Allesfitters by following the instructions provided in the Colab notebook.
+</details>
 
 <details>
 
