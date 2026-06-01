@@ -1,0 +1,94 @@
+names,values
+##############################################################################,
+### General settings
+##############################################################################,
+companions_phot,b 
+companions_rv,
+inst_phot,20241109.TESS.SPOC.20.120.LC 20241109.TESS.SPOC.43.120.LC 20241109.TESS.SPOC.44.120.LC 20241109.TESS.SPOC.45.120.LC 20241109.TESS.SPOC.71.120.LC 20241109.TESS.SPOC.72.120.LC 
+inst_rv,
+###############################################################################,
+# Fit performance settings,
+###############################################################################,
+multiprocess,True
+multiprocess_cores,all
+fast_fit,True
+secondary_eclipse,False
+phase_curve,False
+shift_epoch,False
+inst_for_b_epoch,all
+fast_fit_width,0.3333
+mcmc_nwalkers,293
+###############################################################################,
+# MCMC settings,
+###############################################################################,
+mcmc_total_steps,1000
+mcmc_burn_steps,500
+mcmc_thin_by,10
+#mcmc_pre_run_loops,2
+#mcmc_pre_run_steps,1000
+mcmc_total_steps_over_max_tau,50
+de_steps,5000
+optimization,False
+###############################################################################,
+# Nested Sampling settings,
+###############################################################################,
+ns_modus,dynamic
+ns_nlive,500
+ns_bound,single
+ns_sample,rwalk
+ns_tol,0.01
+###############################################################################,
+# Limb darkening law per object and instrument,
+# if 'lin' one corresponding parameter called 'ldc_q1_inst' has to be given in params.csv,
+# if 'quad' two corresponding parameter called 'ldc_q1_inst' and 'ldc_q2_inst' have to be given in params.csv,
+# if 'sing' three corresponding parameter called 'ldc_q1_inst'; 'ldc_q2_inst' and 'ldc_q3_inst' have to be given in params.csv,
+ ###############################################################################,
+host_ld_law_20241109.TESS.SPOC.20.120.LC,quad
+host_ld_law_20241109.TESS.SPOC.43.120.LC,quad
+host_ld_law_20241109.TESS.SPOC.44.120.LC,quad
+host_ld_law_20241109.TESS.SPOC.45.120.LC,quad
+host_ld_law_20241109.TESS.SPOC.71.120.LC,quad
+host_ld_law_20241109.TESS.SPOC.72.120.LC,quad
+###############################################################################,
+# Baseline settings per instrument,
+# baseline params per instrument: sample_offset / sample_linear / sample_GP / hybrid_offset / hybrid_poly_1 / hybrid_poly_2 / hybrid_poly_3 / hybrid_pol_4 / hybrid_spline / hybrid_GP,
+# if 'sample_offset' one corresponding parameter called 'baseline_offset_key_inst' has to be given in params.csv,
+# if 'sample_linear' two corresponding parameters called 'baseline_a_key_inst' and 'baseline_b_key_inst' have to be given in params.csv,
+# if 'sample_GP' two corresponding parameters called 'baseline_gp1_key_inst' and 'baselie_gp2_key_inst' have to be given in params.csv,
+###############################################################################,
+baseline_flux_20241109.TESS.SPOC.20.120.LC,sample_GP_Matern32
+baseline_flux_20241109.TESS.SPOC.43.120.LC,sample_GP_Matern32
+baseline_flux_20241109.TESS.SPOC.44.120.LC,sample_GP_Matern32
+baseline_flux_20241109.TESS.SPOC.45.120.LC,sample_GP_Matern32
+baseline_flux_20241109.TESS.SPOC.71.120.LC,sample_GP_Matern32
+baseline_flux_20241109.TESS.SPOC.72.120.LC,sample_GP_Matern32
+###############################################################################,
+# Error settings per instrument,
+# errors (overall scaling) per instrument: sample / hybrid,
+# if 'sample' one corresponding parameter called 'ln_err_key_inst' (photometry) or 'ln_jitter_key_inst' (RV) has to be given in params.csv,
+###############################################################################,
+error_flux_20241109.TESS.SPOC.20.120.LC,sample
+error_flux_20241109.TESS.SPOC.43.120.LC,sample
+error_flux_20241109.TESS.SPOC.44.120.LC,sample
+error_flux_20241109.TESS.SPOC.45.120.LC,sample
+error_flux_20241109.TESS.SPOC.71.120.LC,sample
+error_flux_20241109.TESS.SPOC.72.120.LC,sample
+# TTVs,
+###############################################################################
+fit_ttvs,True
+###############################################################################
+# Flux weighted RVs per object and instrument,
+# ("Yes" for Rossiter-McLaughlin effect),
+###############################################################################,
+t_exp_20241109.TESS.SPOC.20.120.LC,0.001388888888888889
+t_exp_n_int_20241109.TESS.SPOC.20.120.LC,1
+t_exp_20241109.TESS.SPOC.43.120.LC,0.001388888888888889
+t_exp_n_int_20241109.TESS.SPOC.43.120.LC,1
+t_exp_20241109.TESS.SPOC.44.120.LC,0.001388888888888889
+t_exp_n_int_20241109.TESS.SPOC.44.120.LC,1
+t_exp_20241109.TESS.SPOC.45.120.LC,0.001388888888888889
+t_exp_n_int_20241109.TESS.SPOC.45.120.LC,1
+t_exp_20241109.TESS.SPOC.71.120.LC,0.001388888888888889
+t_exp_n_int_20241109.TESS.SPOC.71.120.LC,1
+t_exp_20241109.TESS.SPOC.72.120.LC,0.001388888888888889
+t_exp_n_int_20241109.TESS.SPOC.72.120.LC,1

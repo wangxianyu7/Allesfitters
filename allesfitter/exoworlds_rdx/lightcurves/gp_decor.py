@@ -468,7 +468,7 @@ def gp_decor(x,y,
                 
         #::: run evaluation
         logprint("\nRunning full MCMC")
-        sampler.run_mcmc(p0, total_steps/thin_by, thin_by=thin_by, progress=True);
+        sampler.run_mcmc(p0, int(total_steps/thin_by), thin_by=thin_by, progress=True);
     
     
     if multiprocess:    

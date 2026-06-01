@@ -107,7 +107,14 @@ class Basement():
 
         #::: host Teff (for the Hirano RM thermal broadening); read from params_star.csv
         self.load_host_teff()
-        
+
+        #::: pre-build PyTransit models per instrument for the TTV fast path (no-op if fit_ttvs is off)
+        try:
+            from .computer import setup_transit_models
+            setup_transit_models(self)
+        except Exception as e:
+            warnings.warn('setup_transit_models failed (TTV fast path disabled, slow path still works): '+str(e))
+
         #::: if baseline model == sample_GP, set up a GP object for photometric data
 #        self.setup_GPs()
         

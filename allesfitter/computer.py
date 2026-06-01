@@ -86,6 +86,26 @@ import numpy as np
 from pytransit import QuadraticModel ### Xian-Yu added, 2014-01-14
 from pytransit import RoadRunnerModel
 tm = RoadRunnerModel('quadratic')
+
+#::: per-instrument pre-built RoadRunnerModels for the TTV fast path (filled by setup_transit_models)
+_tm_models = {}             # inst -> RoadRunnerModel with set_data already called
+_tm_ttv_transit_idx = {}    # inst -> ndarray of global transit indices covered (fit_ttvs mode)
+
+
+def setup_transit_models(basement=None):
+    '''
+    Kept for API/compat.  The TTV piecewise model now reuses the single global
+    RoadRunnerModel `tm` (see flux_fct_piecewise) instead of pre-building one
+    model per instrument.  Maintaining many RoadRunnerModel instances triggered
+    PyTransit/numba aborts in threaded contexts (e.g. plotting), so this is now
+    a no-op that simply ensures the caches are empty.
+    '''
+    global _tm_models, _tm_ttv_transit_idx
+    _tm_models = {}
+    _tm_ttv_transit_idx = {}
+    return
+
+
 from radvel.kepler import rv_drive             ### Xian-Yu: lightweight Keplerian (avoids astropy-units overhead of radvel.RVModel)
 from radvel.orbit import timetrans_to_timeperi
 from .rm_models import hirano2011_rm   ### Xian-Yu: self-contained Hirano+2011 RM (replaces tracit)
@@ -790,108 +810,66 @@ def flux_subfct_flares(params, inst, companion, xx=None, settings=None, return_f
 #==============================================================================
 def flux_fct_piecewise(params, inst, companion, xx=None, settings=None):
     '''
+    Evaluate the transit model across all observed transits with individual TTV
+    offsets (b_ttv_transit_N).  PyTransit-based (replaces the old ellc.lc version).
+
+    Goes transit by transit, REUSING the single module-global RoadRunnerModel
+    `tm`: set_data on that transit's time slice (with exposure supersampling when
+    configured) and evaluate with t0 = epoch + ttv_transit_N.  Reusing one global
+    model instance -- rather than many RoadRunnerModel instances -- avoids the
+    PyTransit/numba multi-instance aborts seen in threaded contexts (e.g. plotting).
+
     ! params must be updated via update_params() before calling this function !
     '''
-    
-    #-------------------------------------------------------------------------- 
-    #::: defaults
-    #-------------------------------------------------------------------------- 
     if settings is None:
         settings = config.BASEMENT.settings
-        
-    if xx is None:
-        t_exp = settings['t_exp_'+inst]
-        n_int = settings['t_exp_n_int_'+inst]
-        model_flux = np.ones_like(config.BASEMENT.data[inst]['time']) #* np.nan               
-    else:
-        t_exp = None
-        n_int = None
-        model_flux = np.ones_like(xx) #* np.nan     
-    
-    
-    #-------------------------------------------------------------------------- 
-    #::: go through the time series transit by transit to fit for TTVs
-    #-------------------------------------------------------------------------- 
-    for n_transit in range(len(config.BASEMENT.data[companion+'_tmid_observed_transits'])):
-        
+
+    base_xx = xx if xx is not None else config.BASEMENT.data[inst]['time']
+
+    if (params[companion+'_rr'] is None) or (params[companion+'_rr'] <= 0):
+        return np.ones_like(base_xx)
+
+    tmids = config.BASEMENT.data[companion+'_tmid_observed_transits']
+    k     = params[companion+'_rr']
+    ldc   = params['host_ldc_'+inst]
+    p     = params[companion+'_period']
+    rsuma = params[companion+'_rsuma']
+    a     = (1. + k) / rsuma
+    i     = params[companion+'_incl'] / 180. * np.pi
+    secosw = params[companion+'_f_c']
+    sesinw = params[companion+'_f_s']
+    e     = secosw**2 + sesinw**2
+    w     = np.mod(np.arctan2(sesinw, secosw), 2 * np.pi)
+    epoch = params[companion+'_epoch']
+    dil   = params['dil_'+inst]
+
+    t_exp = settings['t_exp_'+inst]
+    n_int = settings['t_exp_n_int_'+inst]
+    width = settings['fast_fit_width']
+
+    model_flux = np.ones_like(base_xx)
+
+    for n_transit, tmid in enumerate(tmids):
         if xx is None:
             ind = config.BASEMENT.data[inst][companion+'_ind_time_transit_'+str(n_transit+1)]
             xx_piecewise = config.BASEMENT.data[inst][companion+'_time_transit_'+str(n_transit+1)]
         else:
-            tmid = config.BASEMENT.data[companion+'_tmid_observed_transits'][n_transit]
-            width = settings['fast_fit_width']
-            ind = np.where( (xx>=(tmid-width/2.)) \
-                          & (xx<=(tmid+width/2.)) )[0]
+            ind = np.where((xx >= (tmid - width/2.)) & (xx <= (tmid + width/2.)))[0]
             xx_piecewise = xx[ind]
-        
-        if len(xx_piecewise)>0:
-            
-            #::: FutureMax warning: one does not simply replace this with flux_subfct_ellc, because it needs the additive term after epoch
-            # model_flux_piecewise = flux_subfct_ellc(params, inst, companion, xx=xx_piecewise, settings=settings, t_exp=t_exp, n_int=n_int)
 
-            #::: planet and EB transit lightcurve model
-            if (params[companion+'_rr'] is not None) and (params[companion+'_rr'] > 0):
-                model_flux_piecewise = ellc.lc(
-                                  t_obs =       xx_piecewise, 
-                                  radius_1 =    params[companion+'_radius_1'], 
-                                  radius_2 =    params[companion+'_radius_2'], 
-                                  sbratio =     params[companion+'_sbratio_'+inst], 
-                                  incl =        params[companion+'_incl'], 
-                                  light_3 =     params['dil_'+inst] / (1.-params['dil_'+inst]),
-                                  t_zero =      params[companion+'_epoch'] + params[companion+'_ttv_transit_'+str(n_transit+1)],
-                                  period =      params[companion+'_period'],
-                                  a =           params[companion+'_a'],
-                                  q =           params[companion+'_q'],
-                                  f_c =         params[companion+'_f_c'],
-                                  f_s =         params[companion+'_f_s'],
-                                  ldc_1 =       params['host_ldc_'+inst],
-                                  ldc_2 =       params[companion+'_ldc_'+inst],
-                                  gdc_1 =       params['host_gdc_'+inst],
-                                  gdc_2 =       params[companion+'_gdc_'+inst],
-                                  didt =        params['didt_'+inst], 
-                                  domdt =       params['domdt_'+inst], 
-                                  rotfac_1 =    params['host_rotfac_'+inst], 
-                                  rotfac_2 =    params[companion+'_rotfac_'+inst], 
-                                  hf_1 =        params['host_hf_'+inst], #1.5, 
-                                  hf_2 =        params[companion+'_hf_'+inst], #1.5,
-                                  bfac_1 =      params['host_bfac_'+inst],
-                                  bfac_2 =      params[companion+'_bfac_'+inst], 
-                                  heat_1 =      divide(params['host_heat_'+inst],2.),
-                                  heat_2 =      divide(params[companion+'_heat_'+inst],2.),
-                                  lambda_1 =    params['host_lambda'], 
-                                  lambda_2 =    params[companion+'_lambda'], 
-                                  vsini_1 =     params['host_vsini'],
-                                  vsini_2 =     params[companion+'_vsini'], 
-                                  t_exp =       t_exp,
-                                  n_int =       n_int,
-                                  grid_1 =      settings['host_grid_'+inst],
-                                  grid_2 =      settings[companion+'_grid_'+inst],
-                                  ld_1 =        settings['host_ld_law_'+inst],
-                                  ld_2 =        settings[companion+'_ld_law_'+inst],
-                                  shape_1 =     settings['host_shape_'+inst],
-                                  shape_2 =     settings[companion+'_shape_'+inst],
-                                  spots_1 =     params['host_spots_'+inst], 
-                                  spots_2 =     params[companion+'_spots_'+inst], 
-                                  exact_grav =  settings['exact_grav'],
-                                  verbose =     False
-                                  )
-                
-                #::: and here comes an ugly hack around ellc, for those who want to fit reflected light and thermal emission separately
-                '''
-                if (companion+'_thermal_emission_amplitude_'+inst in params) and (params[companion+'_thermal_emission_amplitude_'+inst]>0):
-                    model_flux += calc_thermal_curve(params, inst, companion, xx, t_exp, n_int)
-                '''
-                
-            else:
-                model_flux_piecewise = np.ones_like(xx)
-                    
-            model_flux[ind] = model_flux_piecewise
-    
+        if len(xx_piecewise) == 0:
+            continue
 
-    #-------------------------------------------------------------------------- 
-    #::: return
-    #-------------------------------------------------------------------------- 
-    return model_flux     
+        t_zero = epoch + params[companion+'_ttv_transit_'+str(n_transit+1)]
+        if (t_exp is not None) and (n_int is not None) and (n_int > 1):
+            _lcids = np.zeros(len(xx_piecewise), dtype=int)
+            tm.set_data(xx_piecewise, lcids=_lcids, nsamples=[n_int], exptimes=[t_exp])
+        else:
+            tm.set_data(xx_piecewise)
+        model_flux_piecewise = tm.evaluate(k, ldc, t_zero, p, a, i, e, w)
+        model_flux[ind] = 1. + (model_flux_piecewise - 1.) * (1. - dil)
+
+    return model_flux
 
 
 
