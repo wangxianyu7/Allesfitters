@@ -82,57 +82,99 @@ for dilution:
 '''
 
 
-import tracit.dynamics as dynamics
-import numpy as np
 import numpy as np
 from pytransit import QuadraticModel ### Xian-Yu added, 2014-01-14
 from pytransit import RoadRunnerModel
 tm = RoadRunnerModel('quadratic')
-import radvel ### Xian-Yu added, 2014-01-14
+from radvel.kepler import rv_drive             ### Xian-Yu: lightweight Keplerian (avoids astropy-units overhead of radvel.RVModel)
+from radvel.orbit import timetrans_to_timeperi
+from .rm_models import hirano2011_rm   ### Xian-Yu: self-contained Hirano+2011 RM (replaces tracit)
 
 
-def get_rm_tracit(time, rr, ar, period, t0, inc, ecc, omega, lambda_r, vsini, xi, zeta, u1, u2):
-    orbparams = dynamics.OrbitalParams()
-    orbparams.Rp = rr # Planet-to-star radius ratio.
-    orbparams.ecc = ecc # Eccentricity.
-    orbparams.per = period # Orbital period.
-    orbparams.w = omega # Argument of periastron in degress.
-    orbparams.T0 = t0 # Time of inferior conjunction in days.
-    ecc = orbparams.ecc
-    omega = orbparams.w
-    T0 = orbparams.T0
-    per = orbparams.per
-    omega = omega%360.0
-    if (ecc > 0.0) or (omega != 90.):
-                f = 0.5*np.pi - omega*np.pi/180.
-                ew = 2*np.arctan(np.tan(0.5*f)*np.sqrt((1 - ecc)/(1 + ecc)))
-                Tw = T0 - per/(2*np.pi)*(ew - ecc*np.sin(ew))
+#::: physical constants for the full Gaussian broadening beta (Hirano+2011 Eq. 20)
+_kB_SI   = 1.380649e-23          # Boltzmann constant, J/K
+_m_Fe_kg = 56 * 1.66054e-27      # Iron atom mass, kg (dominant lines in RV analyses)
+_c_kms   = 2.998e5               # Speed of light, km/s (for beta_IP from resolution R)
+
+# Instrumental profile Gaussian width beta_IP for common RV spectrographs (km/s).
+# beta_IP = c / (R * 2*sqrt(2*ln2))  where R is the spectral resolving power.
+# Used to compute the full Gaussian broadening for the Hirano RM model:
+#   beta = sqrt(beta_thermal^2 + xi^2 + beta_IP^2)   [Hirano+2011 Eq. 20]
+_BETA_IP_KMS = {
+    'Keck':     2.55,   # R ~  50000, Keck/HIRES
+    'HARPS':    1.10,   # R ~ 115000
+    'HARPS-N':  1.11,   # R ~ 115000, TNG/HARPS-N
+    'FIES':     1.89,   # R ~  67000, NOT/FIES (high-res mode)
+    'CORALIE':  2.55,   # R ~  50000
+    'HDS':      2.83,   # R ~  45000, Subaru/HDS
+    'NEID':     1.16,   # R ~ 110000, WIYN/NEID
+    'KPF':      1.30,   # R ~  98000, Keck/KPF
+    'MAROON-X': 1.50,   # R ~  85000, Gemini/MAROON-X
+    'ESPRESSO': 0.91,   # R ~ 140000, VLT/ESPRESSO (1-UT mode)
+    'CARMENES': 1.35,   # R ~  94600, CAHA/CARMENES VIS
+}
+_DEFAULT_BETA_IP_KMS = 2.5   # conservative default for unlisted instruments
+
+
+def get_rm_hirano2011(time, rr, ar, period, t0, inc, ecc, omega, lambda_r, vsini, xi, zeta, u1, u2,
+                      teff=5750.0, inst=None, resolution=None):
+    """
+    Self-contained Hirano+2011 RM anomaly (drop-in replacement for the old
+    tracit-based ``get_rm_tracit``).  Returns the RM signal in km/s.
+
+    Same call signature as the old function plus three optional kwargs that feed
+    the full Gaussian broadening beta (Hirano+2011 Eq. 20):
+
+        beta = sqrt(beta_thermal^2 + xi^2 + beta_IP^2)
+
+    teff       : float  Stellar effective temperature in K -> beta_thermal.
+    inst       : str    RV instrument name; base name (before first '.') is
+                        looked up in _BETA_IP_KMS for beta_IP, else default.
+    resolution : float  Spectral resolving power R; if given, beta_IP =
+                        c/(R*2*sqrt(2*ln2)) and overrides the inst lookup.
+    """
+    omega_deg = omega % 360.0
+    omega_rad = np.deg2rad(omega_deg)
+    inc_rad = np.deg2rad(inc)
+    lambda_rad = np.deg2rad(lambda_r)
+
+    #::: full Gaussian broadening beta (Hirano+2011 Eq. 20), all in km/s
+    beta_thermal_kms = np.sqrt(2.0 * _kB_SI * teff / _m_Fe_kg) / 1e3
+    if resolution is not None:
+        beta_ip_kms = _c_kms / (float(resolution) * 2.0 * np.sqrt(2.0 * np.log(2.0)))
+    elif inst:
+        base_inst = inst.split('.')[0]
+        beta_ip_kms = _BETA_IP_KMS.get(inst, _BETA_IP_KMS.get(base_inst, _DEFAULT_BETA_IP_KMS))
     else:
-        Tw = T0
-    orbparams.Tw = Tw # Time of periastron passage in days.
-    orbparams.K = 0 # Velocity semi-amplitude in m/s.
-    orbparams.RVsys = 0.0 # Systemic velocity in m/s.
-    orbparams.inc = inc # Inclination in degrees.
-    orbparams.a = ar # Semi-major axis in stellar radii.
-    orbparams.imp = None # Impact parameter.
-    orbparams.dur = None # Total transit duration, i.e., :math:`T_{41}`.
-    orbparams.lam = lambda_r # Projected obliquity in degrees.
-    orbparams.LD = 'quad' # Limb-darkening law see :py:class:`StellarParams`, default 'uni'.
-    orbparams.cs = u1, u2 # LDC 1 2
-    stellarparams = dynamics.StellarParams()
-    stellarparams.Teff = 5750 # Effective temperature in Kelvin.
-    stellarparams.logg = 4.5 # log surface gravity in cgs units.
-    stellarparams.MeH = 0.0 # Metallicity in dex.
-    stellarparams.vsini = vsini # Projected rotational velocity in km/s.
-    stellarparams.inc = 90. # Inclination in degrees.
-    stellarparams.LD = 'quad' # Limb-darkening law, default 'uni'.
-    stellarparams.xi = xi # Microturbulence in km/s.
-    stellarparams.zeta = zeta # Macroturbulence in km/s.
-    stellarparams.gamma = 1.0  # The Lorentzian dispersion of spectral lines.
-    stellarparams.beta = 3.0 # Gaussian dispersion of spectral lines in km/s.
-    stellarparams.alpha = 0.0 # Coefficient of differential rotation.
-    rv = dynamics.get_RV(time, orbparams, RM=True, stelpars=stellarparams)
-    return rv/1e3
+        beta_ip_kms = _DEFAULT_BETA_IP_KMS
+    beta_total_kms = np.sqrt(beta_thermal_kms**2 + xi**2 + beta_ip_kms**2)
+
+    #::: convert time of inferior conjunction t0 to time of periastron passage tp
+    if (ecc > 0.0) or (omega_deg != 90.0):
+        f = 0.5 * np.pi - omega_rad
+        e_anom = 2.0 * np.arctan(np.tan(0.5 * f) * np.sqrt((1.0 - ecc) / (1.0 + ecc)))
+        tp = t0 - period / (2.0 * np.pi) * (e_anom - ecc * np.sin(e_anom))
+    else:
+        tp = t0
+
+    rm_ms = hirano2011_rm(
+        bjd=time,
+        tp=tp,
+        period=period,
+        e=ecc,
+        omega=omega_rad,
+        inc=inc_rad,
+        ar=ar,
+        p=rr,
+        u1=u1,
+        u2=u2,
+        vsini=vsini * 1e3,           # km/s -> m/s
+        lam=lambda_rad,
+        vgamma=1000.0,               # Lorentzian dispersion, m/s
+        vzeta=zeta * 1e3,            # macroturbulence, km/s -> m/s
+        vbeta=beta_total_kms * 1e3,  # full Gaussian broadening, km/s -> m/s
+    )
+    return rm_ms / 1e3               # m/s -> km/s
 
 
 ###############################################################################
@@ -1049,18 +1091,13 @@ def rv_fct(params, inst, companion, xx=None, settings=None):
         tc1  = params[companion+'_epoch']
         secosw1 = params[companion+'_f_c']
         sesinw1 = params[companion+'_f_s']
-        logk1 = np.log(params[companion+'_K']*1000)
+        #::: f_c = sqrt(e)cos(w), f_s = sqrt(e)sin(w)  ->  e = f_c^2 + f_s^2, w = atan2(f_s, f_c)
+        e = secosw1**2 + sesinw1**2
+        w = np.arctan2(sesinw1, secosw1)   # radians; arctan2 handles e==0 cleanly
 
 
         # calculate the duration of the transit
         try:
-            e = np.sqrt(secosw1**2 + sesinw1**2)
-            if e == 0:
-                w = 0
-            elif secosw1 == 0:
-                w = np.pi/2
-            else:
-                w = np.arctan2(sesinw1,secosw1)
             R_star_over_a = params[companion+'_rsuma'] / (1. + params[companion+'_rr'])
             eccentricity_correction_T_tra = ( np.sqrt(1. - e**2) / ( 1. + e*np.sin(w) ) )
             T_tra_tot = params[companion+'_period'] / np.pi * 24. \
@@ -1072,15 +1109,10 @@ def rv_fct(params, inst, companion, xx=None, settings=None):
             # if the calculation of the duration of the transit fails, we set it to 0.5 days
             T_tra_tot = 0.5
 
-        radvelparams = radvel.Parameters(1,basis='per tc secosw sesinw logk')
-        radvelparams['per1'] = radvel.Parameter(value=per1)
-        radvelparams['tc1'] = radvel.Parameter(value=tc1)
-        radvelparams['secosw1'] = radvel.Parameter(value=secosw1)
-        radvelparams['sesinw1'] = radvel.Parameter(value=sesinw1)
-        radvelparams['logk1'] = radvel.Parameter(value=logk1) 
-
-        mod = radvel.RVModel(radvelparams)
-        model_rv1 = mod(xx)/1e3
+        #::: lightweight Keplerian RV via radvel.kepler.rv_drive (pure numpy, no astropy units)
+        K1  = params[companion+'_K'] * 1e3            # km/s -> m/s
+        tp1 = timetrans_to_timeperi(tc1, per1, e, w)  # time of inferior conjunction -> periastron
+        model_rv1 = rv_drive(xx, np.array([per1, tp1, e, w, K1])) / 1e3   # m/s -> km/s
         model_rv2 = np.zeros_like(model_rv1)
 
         def transit_mask(time, period, duration, T0):
@@ -1091,7 +1123,11 @@ def rv_fct(params, inst, companion, xx=None, settings=None):
         # let us use 12 hours as the duration of the transit here
         in_transit_mask = transit_mask(xx, per1, T_tra_tot, tc1)
         rm = np.zeros_like(xx)
-        if config.BASEMENT.settings[companion+'_flux_weighted_'+inst] == True:
+        #::: flux_weighted may be True (use instrument table / default beta_IP)
+        #::: or a numeric spectral resolution R (e.g. 140000) to compute beta_IP directly
+        _fw = config.BASEMENT.settings[companion+'_flux_weighted_'+inst]
+        _rm_resolution = _fw if isinstance(_fw, float) and _fw > 1.0 else None
+        if _fw:
             # print(inst,'RM com')
             time = xx[in_transit_mask]
             rr = params[companion+'_rr']
@@ -1107,6 +1143,9 @@ def rv_fct(params, inst, companion, xx=None, settings=None):
             omega = np.rad2deg(np.mod( np.arctan2(params[companion+'_f_s'], params[companion+'_f_c']), 2*np.pi))
             q1, q2 = params['host_ldc_'+inst]
             u1 = 2*np.sqrt(q1)*q2; u2 = np.sqrt(q1)*(1-2*q2)
+            # feeds beta_thermal: prefer a fitted host_teff param, else Teff_star
+            # from params_star.csv (stored in settings), else the old hardcoded 5750 K
+            teff_val = float(params.get('host_teff', config.BASEMENT.settings.get('host_teff', 5750.0)))
             if np.isnan(rr*ar*period*t0*inc*lambda_r*vsini*zi*zeta*ecc*omega*q1*q2*u1*u2):
                 rm[in_transit_mask] = np.nan
             else:
@@ -1119,13 +1158,11 @@ def rv_fct(params, inst, companion, xx=None, settings=None):
                         # Compute the time offsets
                         time_offsets = (np.arange(ninterp) / ninterp - (ninterp - 1.0) / (2.0 * ninterp)) / 1440.0 * exptime
                         transitbjd = bjdtime[:, None] + time_offsets
-                        supersampled_model = []
-                        for i in range(npoints):
-                            supersampled_values = get_rm_tracit(transitbjd[i], rr, ar, period, t0, inc, ecc, omega, lambda_r, vsini, zi, zeta, u1, u2)
-                            supersampled_model.append(np.mean(supersampled_values))
-                        rm[in_transit_mask] = np.asarray(supersampled_model)
+                        # vectorized supersampling: one call over all sub-exposures, then average
+                        all_rm = get_rm_hirano2011(transitbjd.ravel(), rr, ar, period, t0, inc, ecc, omega, lambda_r, vsini, zi, zeta, u1, u2, teff=teff_val, inst=inst, resolution=_rm_resolution)
+                        rm[in_transit_mask] = all_rm.reshape(npoints, ninterp).mean(axis=1)
                     else:
-                        rm[in_transit_mask] = get_rm_tracit(time, rr, ar, period, t0, inc, ecc, omega, lambda_r, vsini, zi, zeta, u1, u2)
+                        rm[in_transit_mask] = get_rm_hirano2011(time, rr, ar, period, t0, inc, ecc, omega, lambda_r, vsini, zi, zeta, u1, u2, teff=teff_val, inst=inst, resolution=_rm_resolution)
                 except:
                     rm[in_transit_mask] = np.nan
             if np.isnan(np.mean(rm)):

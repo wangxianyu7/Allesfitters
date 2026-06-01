@@ -77,6 +77,7 @@ error_rv_Keck,sample
 #t_exp_n_int_Keck,10
 ###############################################################################,
 # Flux weighted RVs per object and instrument,
-# ("True" for Rossiter-McLaughlin effect),
+# ("True" for Rossiter-McLaughlin effect; or a numeric spectral resolution R,
+#  e.g. 67000 for Keck/HIRES B5 decker, used for the Hirano RM beta_IP),
 ###############################################################################,
-b_flux_weighted_Keck,True
+b_flux_weighted_Keck,67000

@@ -104,6 +104,9 @@ class Basement():
         #::: external priors (e.g. stellar density)
         self.external_priors = {}
         self.load_stellar_priors()
+
+        #::: host Teff (for the Hirano RM thermal broadening); read from params_star.csv
+        self.load_host_teff()
         
         #::: if baseline model == sample_GP, set up a GP object for photometric data
 #        self.setup_GPs()
@@ -447,8 +450,18 @@ class Basement():
                     
         for companion in self.settings['companions_rv']:
             for inst in list(self.settings['inst_rv']) + list(self.settings['inst_rv2']):
-                if companion+'_flux_weighted_'+inst in self.settings: 
-                    self.settings[companion+'_flux_weighted_'+inst] = set_bool(self.settings[companion+'_flux_weighted_'+inst])
+                if companion+'_flux_weighted_'+inst in self.settings:
+                    #::: accept either a boolean (True/False) or a numeric spectral
+                    #::: resolution R (e.g. 140000) used by the Hirano RM model for beta_IP
+                    _fw_raw = self.settings[companion+'_flux_weighted_'+inst]
+                    try:
+                        _fw_num = float(_fw_raw)
+                    except (ValueError, TypeError):
+                        _fw_num = None
+                    if _fw_num is not None and _fw_num > 1.0:
+                        self.settings[companion+'_flux_weighted_'+inst] = _fw_num
+                    else:
+                        self.settings[companion+'_flux_weighted_'+inst] = set_bool(_fw_raw)
                 else:
                     self.settings[companion+'_flux_weighted_'+inst] = False
         
@@ -1344,6 +1357,29 @@ class Basement():
             
                 
                 
+    ###############################################################################
+    #::: host effective temperature (for the Hirano RM model)
+    ###############################################################################
+    def load_host_teff(self):
+        '''
+        Read the host star effective temperature from the 'Teff_star' column of
+        params_star.csv and store it in self.settings['host_teff'] so the Hirano
+        RM model can compute the thermal Gaussian broadening beta_thermal.
+
+        Independent of 'use_host_density_prior'. Silently does nothing if the
+        file or the column is absent; the RM model then falls back to 5750 K.
+        '''
+        fname = os.path.join(self.datadir, 'params_star.csv')
+        if os.path.exists(fname):
+            try:
+                buf = np.genfromtxt(fname, delimiter=',', names=True, dtype=None, encoding='utf-8', comments='#')
+                teff = float(np.atleast_1d(buf['Teff_star'])[0])
+                if np.isfinite(teff) and (teff > 0):
+                    self.settings['host_teff'] = teff
+            except Exception:
+                pass
+
+
     ###############################################################################
     #::: stellar priors
     ###############################################################################

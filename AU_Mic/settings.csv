@@ -65,7 +65,9 @@ fit_ttvs,False
 ###############################################################################,
 # Flux weighted RVs per object and instrument,
 # ("Yes" for Rossiter-McLaughlin effect),
+# value can be True (use built-in instrument beta_IP table / default) or a,
+# numeric spectral resolution R (e.g. 140000 for ESPRESSO) for the Hirano RM beta,
 ###############################################################################,
-b_flux_weighted_EPS.RM,True
+b_flux_weighted_EPS.RM,140000
 #t_exp_EPS.RM,0.0026178001426160336
 #t_exp_n_int_EPS.RM,10

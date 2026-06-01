@@ -25,6 +25,36 @@ from astropy.constants import G, M_earth, M_jup, M_sun, R_earth, R_jup, R_sun, a
 from astropy import units as u
 from time import time as timer
 
+#::: CGS constants computed once at module load to avoid per-call astropy overhead.
+#::: (The docstring below warns astropy units cause a ~17x slow-down; these scalars
+#::: let calc_rho / calc_rho_host run as plain float arithmetic in the 'cgs' path.)
+_G_CGS     = float(G.cgs.value)        # 6.674e-8  cm^3 g^-1 s^-2
+_RSUN_CM   = float(R_sun.cgs.value)    # 6.957e10  cm
+_MSUN_G    = float(M_sun.cgs.value)    # 1.989e33  g
+_RJUP_CM   = float(R_jup.cgs.value)
+_MJUP_G    = float(M_jup.cgs.value)
+_REARTH_CM = float(R_earth.cgs.value)
+_MEARTH_G  = float(M_earth.cgs.value)
+_DAY_S     = 86400.0                   # s day^-1
+
+#::: lazy cache: id(astropy_unit) -> float scale to cm (radius) or g (mass)
+_R_CM_SCALE = {id(u.Rsun): _RSUN_CM, id(u.Rjup): _RJUP_CM, id(u.Rearth): _REARTH_CM}
+_M_G_SCALE  = {id(u.Msun): _MSUN_G,  id(u.Mjup): _MJUP_G,  id(u.Mearth): _MEARTH_G}
+
+def _r_to_cm(unit):
+    '''Return the CGS (cm) scale factor for an astropy length unit, cached by id.'''
+    k = id(unit)
+    if k not in _R_CM_SCALE:
+        _R_CM_SCALE[k] = float((1.0 * unit).to(u.cm).value)
+    return _R_CM_SCALE[k]
+
+def _m_to_g(unit):
+    '''Return the CGS (g) scale factor for an astropy mass unit, cached by id.'''
+    k = id(unit)
+    if k not in _M_G_SCALE:
+        _M_G_SCALE[k] = float((1.0 * unit).to(u.g).value)
+    return _M_G_SCALE[k]
+
 #::: plotting settings
 import seaborn as sns
 sns.set(context='paper', style='ticks', palette='deep', font='sans-serif', font_scale=1.5, color_codes=True)
@@ -351,17 +381,12 @@ def calc_rho(R, M,
     -------
     None.
     """
-    #apply units
-    R *= R_unit
-    M *= M_unit
-    
-    #calculate
-    V = 4./3. * np.pi * R**3
-    rho = M / V
-    
     #return
     if return_unit == 'cgs':
-        return rho.cgs.value
+        #::: fast path: plain float arithmetic using cached unit scale factors
+        R_cm = R * _r_to_cm(R_unit)
+        M_g  = M * _m_to_g(M_unit)
+        return M_g / (4./3. * np.pi * R_cm**3)
     else:
         return None #TODO
     
@@ -392,16 +417,11 @@ def calc_rho_host(P, radius_1, rr, rho_comp,
     -------
     None.
     """
-    #apply units
-    P *= u.d #in days
-    rho_comp = rho_comp * u.g / (u.cm)**3 #in cgs
-    
-    #calculate
-    rho_host = ( (3*np.pi) / (G*P**2) * (1./radius_1)**3 - rr**3 * rho_comp ).decompose()
-    
     #return
     if return_unit == 'cgs':
-        return rho_host.cgs.value
+        #::: fast path: plain float arithmetic (P days -> s; rho_comp and result in g cm^-3)
+        P_s = P * _DAY_S
+        return (3.0 * np.pi) / (_G_CGS * P_s**2) * (1.0 / radius_1)**3 - rr**3 * rho_comp
     else:
         return None #TODO
 
