@@ -15,8 +15,8 @@ os.environ["HDF5_USE_FILE_LOCKING"] = 'FALSE'
 
 def run_allesfitter(path):
    allesfitter.show_initial_guess(path,do_logprint=False)
-   allesfitter.mcmc_fit(path)
-   allesfitter.mcmc_output(path)
+   allesfitter.ns_fit(path)
+   allesfitter.ns_output(path)
 
 path = '.'
 

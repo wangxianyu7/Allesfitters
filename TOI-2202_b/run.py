@@ -1,7 +1,14 @@
-import os, sys
+import os
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMBA_NUM_THREADS"] = "1"
+
+import sys
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt    
+import matplotlib.pyplot as plt
 from pprint import pprint
 sys.path.append('..')
 import allesfitter

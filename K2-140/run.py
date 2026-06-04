@@ -1,6 +1,13 @@
+import os
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMBA_NUM_THREADS"] = "1"
+
 import sys
 sys.path.append('../')
-import allesfitter, os
+import allesfitter
 import matplotlib as mpl
 
 mpl.use("Agg")
